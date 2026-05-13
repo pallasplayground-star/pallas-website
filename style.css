@@ -80,25 +80,26 @@ body::before {
 /* Pixelated MARK canvas */
 #mark {
   position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.06;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) skewX(-4deg);   /* CENTRE + tilt */
+  opacity: 0.12;
   transition: opacity 0.8s ease, filter 0.8s ease;
   pointer-events: none;
   z-index: 5;
   image-rendering: pixelated;
+  width: 440px;
+  height: 120px;
 }
 #mark.activated {
-  opacity: 0.9;
-  filter: drop-shadow(0 0 12px rgba(230,0,126,0.6));
+  opacity: 0.95;
+  filter: drop-shadow(0 0 14px rgba(230,0,126,0.7));
 }
 #mark.dimmed {
-  opacity: 0.9;
+  opacity: 0.95;
   filter: grayscale(0.8) brightness(0.7);
 }
-#mark.shattering {
-  animation: shatter 0.8s steps(4) forwards;
-}
+
 @keyframes shatter {
   0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
   20% { transform: translate(-48%, -48%) scale(1.2) skewX(-3deg); }

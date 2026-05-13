@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PALLAS' PLAYGROUND – Prototype 3</title>
+  <!-- Pixel font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>◉</text></svg>">
 </head>
@@ -101,12 +103,11 @@
       </div>
     </div>
   </div>
-
+  <canvas id="shatter-canvas" style="position:fixed; inset:0; z-index:90; pointer-events:none; display:none;"></canvas>
   <script src="script.js"></script>
   <script src="pact.js"></script>
   <script src="veil.js"></script>
   <script>
-    // Global state & navigation
     window.P = {
       sound: false,
       name: '',
@@ -114,33 +115,50 @@
     };
 
     window.go = function(id) {
+      console.log('[NAV] going to', id);
       document.querySelectorAll('.page').forEach(p => {
         p.classList.remove('active');
         p.classList.add('gone');
       });
       const target = document.getElementById(id);
+      if (!target) {
+        console.error('[NAV] target not found:', id);
+        return;
+      }
       target.classList.remove('gone');
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           target.classList.add('active');
+          console.log('[NAV]', id, 'active');
         });
       });
       window.P.phase = id;
-      if (id === 'pact')  setTimeout(() => PactRitual.init(), 200);
-      if (id === 'veil')  setTimeout(() => VeilRitual.init(), 200);
+      if (id === 'pact') {
+        if (typeof PactRitual !== 'undefined') {
+          setTimeout(() => PactRitual.init(), 200);
+        } else {
+          console.error('[NAV] PactRitual not defined');
+        }
+      }
+      if (id === 'veil') {
+        if (typeof VeilRitual !== 'undefined') {
+          setTimeout(() => VeilRitual.init(), 200);
+        } else {
+          console.error('[NAV] VeilRitual not defined');
+        }
+      }
     };
 
-    // Dev shortcuts
     window.dev = {
       pact: () => window.go('pact'),
       veil: () => window.go('veil'),
       reset: () => location.reload()
     };
 
-    // Boot
     document.addEventListener('DOMContentLoaded', () => {
       ThresholdRitual.init();
     });
-  </script>
+</script>
+
 </body>
 </html>
