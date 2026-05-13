@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PALLAS' PLAYGROUND – Prototype 3</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>◉</text></svg>">
+</head>
+<body>
+  <!-- Grain + scanlines are handled via body pseudo‑elements in CSS -->
+
+  <!-- PAGE 1 – THRESHOLD -->
+  <div id="threshold" class="page active">
+    <canvas id="mark" width="200" height="60"></canvas>
+
+    <div id="cta-zone">
+      <div id="status-line"></div>
+      <button id="enter-btn">ENTER THE PLAYGROUND</button>
+    </div>
+
+    <div id="count-display"></div>
+
+    <div id="sound-modal">
+      <div class="modal-inner">
+        <p class="modal-question">Will you enter with sound?</p>
+        <div class="modal-btns">
+          <button class="choice-btn" data-choice="yes">YES</button>
+          <button class="choice-btn" data-choice="no">SILENCE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2 – THE PACT -->
+  <div id="pact" class="page gone">
+    <div class="pact-body">
+      <div id="pact-greeting" class="pact-line"></div>
+
+      <div id="pact-prompt" class="pact-prompt hidden-el">
+        <button class="pact-btn" id="insta-btn">— Instagram</button>
+        <button class="pact-btn" id="email-btn">— Email</button>
+      </div>
+
+      <div id="verify-section" class="verify-section">
+        <div id="verify-insta" style="display:none; flex-direction:column; gap:1rem;">
+          <div class="verify-row">
+            <input id="insta-input" class="pact-input" type="text" placeholder="@handle" autocomplete="off">
+            <button class="verify-btn" id="insta-verify-btn">Verify</button>
+          </div>
+          <div class="verify-status" id="insta-status"></div>
+        </div>
+
+        <div id="verify-email" style="display:none; flex-direction:column; gap:1rem;">
+          <input id="email-input" class="pact-input" type="text" placeholder="address" autocomplete="off">
+          <div class="verify-status" id="email-status"></div>
+        </div>
+      </div>
+
+      <div id="consent-section" class="consent-section">
+        <label class="consent-label">
+          <input type="checkbox" id="consent-check">
+          <span class="consent-box"></span>
+          <span class="consent-text">I accept the terms &amp; conditions of the playground</span>
+        </label>
+      </div>
+    </div>
+
+    <div id="ascension-msg">
+      <p class="ascension-text">You are in the Playground.</p>
+    </div>
+  </div>
+
+  <!-- PAGE 3 – THE VEIL -->
+  <div id="veil" class="page gone">
+    <div class="veil-header">
+      <span>Pallas' Playground</span>
+      <span id="witness-label"></span>
+    </div>
+
+    <div class="silhouette-zone">
+      <div class="veil-timer-zone">
+        <div class="veil-label">Artifact reveals in</div>
+        <div id="veil-countdown">06 : 22 : 17</div>
+      </div>
+
+      <div class="silhouette" id="silhouette">
+        <div class="silhouette-inner">concealed</div>
+      </div>
+      <div class="silhouette-id">PP-25-A1</div>
+    </div>
+
+    <div class="timeline-zone" id="timeline-zone">
+      <div class="timeline-rail" id="timeline-rail"></div>
+    </div>
+
+    <div id="distortion">
+      <div class="distortion-content">
+        <div class="distortion-label">Revelation imminent</div>
+        <div id="distortion-timer">—</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="pact.js"></script>
+  <script src="veil.js"></script>
+  <script>
+    // Global state & navigation
+    window.P = {
+      sound: false,
+      name: '',
+      phase: 'threshold'
+    };
+
+    window.go = function(id) {
+      document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+        p.classList.add('gone');
+      });
+      const target = document.getElementById(id);
+      target.classList.remove('gone');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          target.classList.add('active');
+        });
+      });
+      window.P.phase = id;
+      if (id === 'pact')  setTimeout(() => PactRitual.init(), 200);
+      if (id === 'veil')  setTimeout(() => VeilRitual.init(), 200);
+    };
+
+    // Dev shortcuts
+    window.dev = {
+      pact: () => window.go('pact'),
+      veil: () => window.go('veil'),
+      reset: () => location.reload()
+    };
+
+    // Boot
+    document.addEventListener('DOMContentLoaded', () => {
+      ThresholdRitual.init();
+    });
+  </script>
+</body>
+</html>
